@@ -1,0 +1,19 @@
+pipeline {
+    agent any
+    tools {
+        maven "Maven"
+    }
+    stages {
+        stage('Build') {
+            steps {
+                git 'https://github.com/rameshdunuka/rameshappproject.git'
+                sh "mvn -Dmaven.test.failure.ignore=true clean install"
+            }
+        }
+}
+post {
+     always {
+deploy adapters: [tomcat9(credentialsId: '56f4d01a-4157-42a1-b58b-0347fce1df0a', path: '', url: 'http://35.170.187.29:8080')], contextPath: null, war: '**/*.war'
+}
+}
+}
